@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle de Validade — Sistema Farmácia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: { colors: {
+      primary: { DEFAULT: '#0F766E', hover: '#0B5D57', light: '#CCFBF1' },
+      surface: '#FFFFFF', bg: '#F4F6F7', border: '#D9DEE1',
+      textmain: '#1F2937', textmuted: '#5B6672',
+      success: { DEFAULT: '#15803D', bg: '#DCFCE7' },
+      warning: { DEFAULT: '#B45309', bg: '#FEF3C7' },
+      danger: { DEFAULT: '#B91C1C', bg: '#FEE2E2' },
+    } } }
+  };
+</script>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="validade">
+<div id="sidebar-root"></div>
+<div id="topbar-root"></div>
+<div id="toast-container" aria-live="polite"></div>
+
+<main class="md:ml-[72px] xl:ml-[220px] pt-16 pb-20 md:pb-6 min-h-screen">
+  <div class="p-4 md:p-6">
+    <h1 class="mb-4">Controle de Validade</h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <button type="button" class="card-filtro card text-left" data-filtro="vencido">
+        <p class="text-legenda mb-1">Vencidos</p>
+        <p class="valor-destaque text-danger" id="contagem-vencidos">0</p>
+      </button>
+      <button type="button" class="card-filtro card text-left" data-filtro="30">
+        <p class="text-legenda mb-1">Vencem em 30 dias</p>
+        <p class="valor-destaque text-warning" id="contagem-30">0</p>
+      </button>
+      <button type="button" class="card-filtro card text-left" data-filtro="90">
+        <p class="text-legenda mb-1">Vencem em 90 dias</p>
+        <p class="valor-destaque" style="color:#B45309cc" id="contagem-90">0</p>
+      </button>
+    </div>
+
+    <div class="card p-0 overflow-x-auto">
+      <table class="table-base table-responsive-cards w-full" aria-label="Lotes por validade">
+        <thead>
+          <tr>
+            <th scope="col">Produto</th>
+            <th scope="col">Lote</th>
+            <th scope="col">Quantidade</th>
+            <th scope="col">Data de validade</th>
+            <th scope="col">Dias restantes</th>
+            <th scope="col">Ação</th>
+          </tr>
+        </thead>
+        <tbody id="lotes-body">
+          <tr><td colspan="6" class="text-center text-textmuted py-8">Carregando lotes...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<div id="bottombar-root"></div>
+<script type="module" src="js/layout.js"></script>
+<script type="module" src="js/validade.js"></script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ficha do Cliente — Sistema Farmácia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: { colors: {
+      primary: { DEFAULT: '#0F766E', hover: '#0B5D57', light: '#CCFBF1' },
+      surface: '#FFFFFF', bg: '#F4F6F7', border: '#D9DEE1',
+      textmain: '#1F2937', textmuted: '#5B6672',
+      success: { DEFAULT: '#15803D', bg: '#DCFCE7' },
+      warning: { DEFAULT: '#B45309', bg: '#FEF3C7' },
+      danger: { DEFAULT: '#B91C1C', bg: '#FEE2E2' },
+    } } }
+  };
+</script>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="clientes">
+<div id="sidebar-root"></div>
+<div id="topbar-root"></div>
+<div id="toast-container" aria-live="polite"></div>
+
+<main class="md:ml-[72px] xl:ml-[220px] pt-16 pb-20 md:pb-6 min-h-screen">
+  <div class="p-4 md:p-6 max-w-4xl">
+    <a href="clientes.html" class="btn-secondary !h-10 !px-3 inline-flex mb-4" aria-label="Voltar para clientes">← Voltar</a>
+
+    <div class="card mb-6">
+      <div class="flex flex-wrap justify-between gap-4">
+        <div>
+          <h1 id="cliente-nome">—</h1>
+          <p class="text-legenda" id="cliente-contato"></p>
+        </div>
+        <div class="text-right">
+          <p class="text-legenda">Saldo devedor</p>
+          <p class="valor-destaque" id="cliente-saldo">R$ 0,00</p>
+          <button type="button" id="btn-registrar-pagamento" class="btn-primary mt-2">Registrar Pagamento</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="mb-6">
+      <h2 class="mb-3">Histórico de compras</h2>
+      <div class="card p-0 overflow-x-auto">
+        <table class="table-base table-responsive-cards w-full" aria-label="Histórico de compras">
+          <thead>
+            <tr><th scope="col">Data</th><th scope="col">Itens</th><th scope="col">Valor</th><th scope="col">Forma de pagamento</th></tr>
+          </thead>
+          <tbody id="historico-compras-body">
+            <tr><td colspan="4" class="text-center text-textmuted py-8">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="mb-3">Histórico de pagamentos de fiado</h2>
+      <div class="card p-0 overflow-x-auto">
+        <table class="table-base table-responsive-cards w-full" aria-label="Histórico de pagamentos">
+          <thead>
+            <tr><th scope="col">Data</th><th scope="col">Valor pago</th></tr>
+          </thead>
+          <tbody id="historico-pagamentos-body">
+            <tr><td colspan="2" class="text-center text-textmuted py-8">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div id="bottombar-root"></div>
+
+<!-- Modal registrar pagamento -->
+<div id="modal-pagamento" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="titulo-pagamento">
+  <div class="modal-box">
+    <h2 id="titulo-pagamento">Registrar Pagamento</h2>
+    <form id="form-pagamento" class="flex flex-col gap-4 mt-4">
+      <div>
+        <label class="form-label" for="pg-valor">Valor pago (R$)*</label>
+        <input id="pg-valor" type="number" min="0.01" step="0.01" required class="input-base">
+      </div>
+      <p id="pg-erro" class="text-danger text-legenda hidden"></p>
+      <div class="flex justify-end gap-2">
+        <button type="button" id="btn-cancelar-pagamento" class="btn-secondary">Cancelar</button>
+        <button type="submit" class="btn-primary">Confirmar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="module" src="js/layout.js"></script>
+<script type="module" src="js/cliente-detalhe.js"></script>
+</body>
+</html>

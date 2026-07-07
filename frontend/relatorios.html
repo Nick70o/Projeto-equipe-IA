@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatórios — Sistema Farmácia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: { colors: {
+      primary: { DEFAULT: '#0F766E', hover: '#0B5D57', light: '#CCFBF1' },
+      surface: '#FFFFFF', bg: '#F4F6F7', border: '#D9DEE1',
+      textmain: '#1F2937', textmuted: '#5B6672',
+      success: { DEFAULT: '#15803D', bg: '#DCFCE7' },
+      warning: { DEFAULT: '#B45309', bg: '#FEF3C7' },
+      danger: { DEFAULT: '#B91C1C', bg: '#FEE2E2' },
+    } } }
+  };
+</script>
+<link rel="stylesheet" href="css/styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body data-page="relatorios">
+<div id="sidebar-root"></div>
+<div id="topbar-root"></div>
+<div id="toast-container" aria-live="polite"></div>
+
+<main class="md:ml-[72px] xl:ml-[220px] pt-16 pb-20 md:pb-6 min-h-screen">
+  <div class="p-4 md:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <h1>Relatórios</h1>
+      <div class="flex gap-2 flex-wrap" id="filtro-periodo" role="tablist" aria-label="Filtro de período">
+        <button type="button" class="btn-secondary !h-10 !px-3 text-legenda" data-periodo="hoje">Hoje</button>
+        <button type="button" class="btn-secondary !h-10 !px-3 text-legenda" data-periodo="7dias">Últimos 7 dias</button>
+        <button type="button" class="btn-secondary !h-10 !px-3 text-legenda" data-periodo="mes">Este mês</button>
+        <button type="button" class="btn-secondary !h-10 !px-3 text-legenda" data-periodo="personalizado">Personalizado</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+      <div class="card xl:col-span-1 bg-primary-light">
+        <p class="text-legenda mb-1">Faturamento</p>
+        <p class="valor-destaque text-primary" id="ind-faturamento">R$ 0,00</p>
+      </div>
+      <div class="card">
+        <p class="text-legenda mb-1">Lucro estimado</p>
+        <p class="valor-destaque" id="ind-lucro">R$ 0,00</p>
+      </div>
+      <div class="card">
+        <p class="text-legenda mb-1">Ticket médio</p>
+        <p class="valor-destaque" id="ind-ticket">R$ 0,00</p>
+      </div>
+      <div class="card">
+        <p class="text-legenda mb-1">Vendas realizadas</p>
+        <p class="valor-destaque" id="ind-vendas">0</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-[1.5fr_1fr] gap-6">
+      <div class="card">
+        <h2 class="mb-3">Faturamento ao longo do tempo</h2>
+        <canvas id="grafico-faturamento" height="140" role="img" aria-label="Gráfico de faturamento ao longo do período selecionado"></canvas>
+      </div>
+
+      <div class="card p-0 overflow-x-auto">
+        <h2 class="p-4 pb-0">Produtos mais vendidos</h2>
+        <table class="table-base w-full mt-2" aria-label="Ranking de produtos mais vendidos">
+          <thead>
+            <tr><th scope="col">Produto</th><th scope="col">Qtd vendida</th><th scope="col">Faturamento</th></tr>
+          </thead>
+          <tbody id="ranking-body">
+            <tr><td colspan="3" class="text-center text-textmuted py-8">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="bottombar-root"></div>
+<script type="module" src="js/layout.js"></script>
+<script type="module" src="js/relatorios.js"></script>
+</body>
+</html>

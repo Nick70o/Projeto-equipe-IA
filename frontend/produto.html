@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastro de Produto — Sistema Farmácia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: { colors: {
+      primary: { DEFAULT: '#0F766E', hover: '#0B5D57', light: '#CCFBF1' },
+      surface: '#FFFFFF', bg: '#F4F6F7', border: '#D9DEE1',
+      textmain: '#1F2937', textmuted: '#5B6672',
+      success: { DEFAULT: '#15803D', bg: '#DCFCE7' },
+      warning: { DEFAULT: '#B45309', bg: '#FEF3C7' },
+      danger: { DEFAULT: '#B91C1C', bg: '#FEE2E2' },
+    } } }
+  };
+</script>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="estoque">
+<div id="sidebar-root"></div>
+<div id="topbar-root"></div>
+<div id="toast-container" aria-live="polite"></div>
+
+<main class="md:ml-[72px] xl:ml-[220px] pt-16 pb-20 md:pb-6 min-h-screen">
+  <div class="p-4 md:p-6 max-w-3xl">
+    <div class="flex items-center gap-3 mb-4">
+      <a href="estoque.html" class="btn-secondary !h-10 !px-3" aria-label="Voltar para o estoque">← Voltar</a>
+      <h1 id="titulo-pagina">Novo Produto</h1>
+    </div>
+
+    <form id="form-produto" class="card flex flex-col gap-4" novalidate>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="md:col-span-2">
+          <label class="form-label" for="p-nome">Nome*</label>
+          <input id="p-nome" type="text" required class="input-base">
+        </div>
+        <div>
+          <label class="form-label" for="p-categoria">Categoria*</label>
+          <input id="p-categoria" type="text" required class="input-base" list="lista-categorias">
+          <datalist id="lista-categorias"></datalist>
+        </div>
+        <div>
+          <label class="form-label" for="p-codigo-barras">Código de barras</label>
+          <input id="p-codigo-barras" type="text" class="input-base">
+        </div>
+        <div>
+          <label class="form-label" for="p-fornecedor">Fornecedor (opcional)</label>
+          <input id="p-fornecedor" type="text" class="input-base">
+        </div>
+        <div>
+          <label class="form-label" for="p-unidade">Unidade de medida</label>
+          <select id="p-unidade" class="input-base">
+            <option value="unidade">Unidade</option>
+            <option value="caixa">Caixa</option>
+            <option value="ml">ml</option>
+            <option value="mg">mg</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label" for="p-preco-custo">Preço de custo</label>
+          <input id="p-preco-custo" type="number" min="0" step="0.01" class="input-base">
+        </div>
+        <div>
+          <label class="form-label" for="p-preco-venda">Preço de venda*</label>
+          <input id="p-preco-venda" type="number" min="0" step="0.01" required class="input-base">
+        </div>
+        <div>
+          <label class="form-label" for="p-estoque-atual">Estoque atual*</label>
+          <input id="p-estoque-atual" type="number" min="0" required class="input-base">
+        </div>
+        <div>
+          <label class="form-label" for="p-estoque-minimo">Estoque mínimo</label>
+          <input id="p-estoque-minimo" type="number" min="0" class="input-base">
+        </div>
+      </div>
+
+      <label class="flex items-center gap-2">
+        <input type="checkbox" id="p-controla-lote" class="w-4 h-4">
+        <span>Controla lote/validade</span>
+      </label>
+
+      <div id="secao-lotes" class="hidden border-t border-border pt-4">
+        <div class="flex items-center justify-between mb-2">
+          <h3>Lotes</h3>
+          <button type="button" id="btn-add-lote" class="btn-secondary !h-9 !px-3 text-legenda">+ Adicionar lote</button>
+        </div>
+        <div id="lista-lotes" class="flex flex-col gap-3"></div>
+      </div>
+
+      <p id="produto-erro" class="text-danger text-legenda hidden"></p>
+
+      <div class="flex justify-end gap-2 pt-2 border-t border-border">
+        <a href="estoque.html" class="btn-secondary">Cancelar</a>
+        <button type="submit" class="btn-primary">Salvar Produto</button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<div id="bottombar-root"></div>
+
+<template id="template-lote">
+  <div class="linha-lote grid grid-cols-1 sm:grid-cols-[1fr_1fr_1fr_auto] gap-2 items-end border border-border rounded-md p-3">
+    <div>
+      <label class="form-label">Número do lote</label>
+      <input type="text" class="input-base lote-numero">
+    </div>
+    <div>
+      <label class="form-label">Quantidade do lote</label>
+      <input type="number" min="1" class="input-base lote-quantidade">
+    </div>
+    <div>
+      <label class="form-label">Data de validade</label>
+      <input type="date" class="input-base lote-validade">
+    </div>
+    <button type="button" class="btn-secondary !h-11 btn-remover-lote" aria-label="Remover lote">🗑️</button>
+  </div>
+</template>
+
+<script type="module" src="js/layout.js"></script>
+<script type="module" src="js/produto.js"></script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estoque — Sistema Farmácia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: { colors: {
+      primary: { DEFAULT: '#0F766E', hover: '#0B5D57', light: '#CCFBF1' },
+      surface: '#FFFFFF', bg: '#F4F6F7', border: '#D9DEE1',
+      textmain: '#1F2937', textmuted: '#5B6672',
+      success: { DEFAULT: '#15803D', bg: '#DCFCE7' },
+      warning: { DEFAULT: '#B45309', bg: '#FEF3C7' },
+      danger: { DEFAULT: '#B91C1C', bg: '#FEE2E2' },
+    } } }
+  };
+</script>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="estoque">
+<div id="sidebar-root"></div>
+<div id="topbar-root"></div>
+<div id="toast-container" aria-live="polite"></div>
+
+<main class="md:ml-[72px] xl:ml-[220px] pt-16 pb-20 md:pb-6 min-h-screen">
+  <div class="p-4 md:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <h1>Estoque</h1>
+      <a href="produto.html" class="btn-primary inline-flex items-center">+ Novo Produto</a>
+    </div>
+
+    <div class="flex flex-wrap gap-3 items-end mb-4">
+      <div class="flex-1 min-w-[220px]">
+        <label class="form-label" for="filtro-busca">Buscar</label>
+        <input id="filtro-busca" type="text" class="input-base" placeholder="Buscar por nome ou categoria...">
+      </div>
+      <div class="min-w-[180px]">
+        <label class="form-label" for="filtro-categoria">Categoria</label>
+        <select id="filtro-categoria" class="input-base">
+          <option value="">Todas</option>
+        </select>
+      </div>
+      <label class="flex items-center gap-2 h-11 px-1">
+        <input type="checkbox" id="filtro-estoque-baixo" class="w-4 h-4">
+        <span class="text-legenda">Mostrar apenas estoque baixo</span>
+      </label>
+    </div>
+
+    <div class="card p-0 overflow-x-auto">
+      <table class="table-base table-responsive-cards w-full" aria-label="Lista de produtos em estoque">
+        <thead>
+          <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Estoque atual</th>
+            <th scope="col">Estoque mínimo</th>
+            <th scope="col">Preço de venda</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="estoque-body">
+          <tr><td colspan="6" class="text-center text-textmuted py-8">Carregando produtos...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<div id="bottombar-root"></div>
+
+<!-- Modal Entrada/Saída rápida -->
+<div id="modal-movimentacao" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="titulo-movimentacao">
+  <div class="modal-box">
+    <h2 id="titulo-movimentacao">Entrada / Saída de estoque</h2>
+    <p class="text-legenda mb-4" id="movimentacao-produto-nome"></p>
+    <form id="form-movimentacao" class="flex flex-col gap-4">
+      <div>
+        <span class="form-label">Tipo</span>
+        <div class="flex gap-2">
+          <label class="btn-secondary flex-1 flex items-center justify-center cursor-pointer gap-2">
+            <input type="radio" name="tipo-mov" value="entrada" checked class="w-4 h-4"> Entrada
+          </label>
+          <label class="btn-secondary flex-1 flex items-center justify-center cursor-pointer gap-2">
+            <input type="radio" name="tipo-mov" value="saida" class="w-4 h-4"> Saída
+          </label>
+        </div>
+      </div>
+      <div>
+        <label class="form-label" for="mov-quantidade">Quantidade*</label>
+        <input id="mov-quantidade" type="number" min="1" required class="input-base">
+      </div>
+      <div>
+        <label class="form-label" for="mov-motivo">Motivo*</label>
+        <select id="mov-motivo" required class="input-base">
+          <option value="compra">Compra</option>
+          <option value="ajuste">Ajuste</option>
+          <option value="perda">Perda</option>
+          <option value="devolucao">Devolução</option>
+        </select>
+      </div>
+      <div>
+        <label class="form-label" for="mov-observacao">Observação (opcional)</label>
+        <textarea id="mov-observacao" class="input-base !h-20 py-2" rows="2"></textarea>
+      </div>
+      <p id="mov-erro" class="text-danger text-legenda hidden"></p>
+      <div class="flex justify-end gap-2">
+        <button type="button" id="btn-cancelar-movimentacao" class="btn-secondary">Cancelar</button>
+        <button type="submit" class="btn-primary">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="module" src="js/layout.js"></script>
+<script type="module" src="js/estoque.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Env / secrets
+.env
+
+# Database
+backend/farmacia.db
+backend/*.db.bak
+*.db-journal
+
+# Logs
+*.log
+
+# Node (frontend)
+node_modules/
+dist/
+.DS_Store

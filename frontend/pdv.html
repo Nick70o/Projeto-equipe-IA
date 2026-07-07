@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDV / Venda — Sistema Farmácia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: { DEFAULT: '#0F766E', hover: '#0B5D57', light: '#CCFBF1' },
+          surface: '#FFFFFF',
+          bg: '#F4F6F7',
+          border: '#D9DEE1',
+          textmain: '#1F2937',
+          textmuted: '#5B6672',
+          success: { DEFAULT: '#15803D', bg: '#DCFCE7' },
+          warning: { DEFAULT: '#B45309', bg: '#FEF3C7' },
+          danger: { DEFAULT: '#B91C1C', bg: '#FEE2E2' },
+        }
+      }
+    }
+  };
+</script>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="pdv">
+<div id="sidebar-root"></div>
+<div id="topbar-root"></div>
+<div id="toast-container" aria-live="polite"></div>
+
+<main class="md:ml-[72px] xl:ml-[220px] pt-16 pb-20 md:pb-6 min-h-screen">
+  <div class="p-4 md:p-6">
+    <div class="flex flex-wrap items-baseline justify-between gap-2 mb-4">
+      <div>
+        <h1>PDV / Venda</h1>
+        <p class="text-legenda" id="info-venda">Venda em andamento — atendente: <span class="font-medium text-textmain">Atendente</span></p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-[65%_35%] gap-6 items-start">
+      <!-- Coluna esquerda: busca + lista de itens -->
+      <section class="flex flex-col gap-4" aria-label="Itens da venda">
+        <div class="relative">
+          <label class="form-label" for="busca-produto">Buscar produto</label>
+          <input
+            id="busca-produto"
+            type="text"
+            class="input-base h-14 text-lg"
+            placeholder="Buscar produto por nome ou código de barras..."
+            autocomplete="off"
+            aria-describedby="busca-ajuda">
+          <p id="busca-ajuda" class="text-legenda mt-1">Enter ou clique para adicionar o produto sugerido — F2 refoca a busca.</p>
+          <ul id="sugestoes-produto" class="absolute z-10 left-0 right-0 bg-surface border border-border rounded-md shadow-lg mt-1 max-h-80 overflow-y-auto hidden" role="listbox"></ul>
+        </div>
+
+        <div class="card p-0 overflow-x-auto">
+          <table class="table-base w-full" aria-label="Itens da venda atual">
+            <thead>
+              <tr>
+                <th scope="col">Produto</th>
+                <th scope="col">Qtd</th>
+                <th scope="col">Preço unit.</th>
+                <th scope="col">Subtotal</th>
+                <th scope="col"><span class="sr-only">Remover</span></th>
+              </tr>
+            </thead>
+            <tbody id="itens-venda-body">
+              <tr id="linha-vazia">
+                <td colspan="5" class="text-center text-textmuted py-8">Nenhum item adicionado. Busque um produto acima para começar.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Coluna direita: totais e pagamento (fixa em desktop) -->
+      <aside class="card sticky top-20 flex flex-col gap-4" aria-label="Totais da venda">
+        <h2>Resumo</h2>
+        <div class="flex justify-between text-corpo-forte">
+          <span class="text-textmuted font-normal">Subtotal</span>
+          <span id="valor-subtotal">R$ 0,00</span>
+        </div>
+        <div>
+          <label class="form-label" for="desconto">Desconto (R$)</label>
+          <input id="desconto" type="number" min="0" step="0.01" class="input-base" value="0">
+        </div>
+        <div class="border-t border-border pt-4 flex justify-between items-center">
+          <span class="font-semibold">Total</span>
+          <span id="valor-total" class="valor-destaque text-primary">R$ 0,00</span>
+        </div>
+        <button id="btn-finalizar" type="button" class="btn-primary w-full text-lg" disabled>
+          Finalizar Venda <span class="text-legenda font-normal opacity-80">(F9)</span>
+        </button>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<div id="bottombar-root"></div>
+
+<!-- Modal de fechamento da venda -->
+<div id="modal-fechamento" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="titulo-fechamento">
+  <div class="modal-box">
+    <h2 id="titulo-fechamento">Fechar venda</h2>
+    <p class="text-legenda mb-4">Total a receber: <strong id="modal-total" class="text-corpo-forte text-textmain">R$ 0,00</strong></p>
+
+    <!-- Estado 1: seleção de forma de pagamento -->
+    <div id="fechamento-selecao" class="flex flex-col gap-4">
+      <div>
+        <span class="form-label">Forma de pagamento</span>
+        <div class="grid grid-cols-2 gap-2" id="formas-pagamento" role="radiogroup" aria-label="Forma de pagamento">
+          <button type="button" data-forma="dinheiro" class="btn-forma btn-secondary">Dinheiro</button>
+          <button type="button" data-forma="cartao" class="btn-forma btn-secondary">Cartão</button>
+          <button type="button" data-forma="pix" class="btn-forma btn-secondary">Pix</button>
+          <button type="button" data-forma="fiado" class="btn-forma btn-secondary">Fiado</button>
+        </div>
+      </div>
+
+      <div id="bloco-dinheiro" class="hidden">
+        <label class="form-label" for="valor-recebido">Valor recebido (R$)</label>
+        <input id="valor-recebido" type="number" min="0" step="0.01" class="input-base">
+        <p class="text-legenda mt-1">Troco: <strong id="valor-troco">R$ 0,00</strong></p>
+      </div>
+
+      <div id="bloco-fiado" class="hidden">
+        <label class="form-label" for="busca-cliente-fiado">Selecione o cliente para lançar esta venda como fiado</label>
+        <input id="busca-cliente-fiado" type="text" class="input-base" placeholder="Buscar cliente por nome ou telefone..." autocomplete="off">
+        <ul id="sugestoes-cliente-fiado" class="border border-border rounded-md mt-1 max-h-40 overflow-y-auto hidden bg-surface" role="listbox"></ul>
+        <p id="cliente-fiado-selecionado" class="text-legenda mt-1"></p>
+      </div>
+
+      <p id="modal-erro" class="text-danger text-legenda hidden"></p>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" id="btn-cancelar-fechamento" class="btn-secondary">Cancelar (Esc)</button>
+        <button type="button" id="btn-confirmar-venda" class="btn-primary">Confirmar</button>
+      </div>
+    </div>
+
+    <!-- Estado 2: aguardando pagamento Pix via gateway (Mercado Pago) -->
+    <div id="fechamento-pix-aguardando" class="hidden flex-col gap-4">
+      <img id="pix-qrcode-img" class="pix-qrcode" alt="QR Code para pagamento via Pix" src="">
+
+      <div>
+        <label class="form-label" for="pix-copia-cola">Pix Copia e Cola</label>
+        <div class="flex gap-2">
+          <input id="pix-copia-cola" type="text" class="input-base" readonly aria-label="Código Pix copia e cola">
+          <button type="button" id="btn-copiar-pix" class="btn-secondary whitespace-nowrap">Copiar</button>
+        </div>
+      </div>
+
+      <p id="pix-status-texto" class="text-legenda text-center" aria-live="polite">Aguardando confirmação do pagamento...</p>
+
+      <p id="pix-erro" class="text-danger text-legenda hidden" aria-live="polite"></p>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" id="btn-cancelar-pix" class="btn-secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmação -->
+<div id="modal-confirmacao" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmacao">
+  <div class="modal-box text-center">
+    <div class="text-5xl mb-2" aria-hidden="true">✅</div>
+    <h2 id="titulo-confirmacao" class="mb-2">Venda concluída</h2>
+    <p id="texto-confirmacao" class="text-corpo-forte mb-6"></p>
+    <div class="flex flex-col sm:flex-row justify-center gap-2">
+      <button type="button" id="btn-imprimir" class="btn-secondary">Imprimir recibo</button>
+      <button type="button" id="btn-nova-venda" class="btn-primary">Nova Venda</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="js/layout.js"></script>
+<script type="module" src="js/pdv.js"></script>
+</body>
+</html>

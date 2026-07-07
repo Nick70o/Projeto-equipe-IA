@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configurações — Sistema Farmácia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: { colors: {
+      primary: { DEFAULT: '#0F766E', hover: '#0B5D57', light: '#CCFBF1' },
+      surface: '#FFFFFF', bg: '#F4F6F7', border: '#D9DEE1',
+      textmain: '#1F2937', textmuted: '#5B6672',
+      success: { DEFAULT: '#15803D', bg: '#DCFCE7' },
+      warning: { DEFAULT: '#B45309', bg: '#FEF3C7' },
+      danger: { DEFAULT: '#B91C1C', bg: '#FEE2E2' },
+    } } }
+  };
+</script>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="configuracoes">
+<div id="sidebar-root"></div>
+<div id="topbar-root"></div>
+<div id="toast-container" aria-live="polite"></div>
+
+<main class="md:ml-[72px] xl:ml-[220px] pt-16 pb-20 md:pb-6 min-h-screen">
+  <div class="p-4 md:p-6 max-w-2xl">
+    <h1 class="mb-4">Configurações</h1>
+
+    <section class="card mb-6">
+      <h2 class="mb-3">Dados da farmácia</h2>
+      <div class="flex flex-col gap-4">
+        <div>
+          <label class="form-label" for="cfg-nome">Nome da farmácia</label>
+          <input id="cfg-nome" type="text" class="input-base" placeholder="Farmácia Exemplo Ltda.">
+        </div>
+        <div>
+          <label class="form-label" for="cfg-telefone">Telefone</label>
+          <input id="cfg-telefone" type="text" class="input-base" placeholder="(11) 91234-5678">
+        </div>
+      </div>
+    </section>
+
+    <section class="card mb-6">
+      <h2 class="mb-3">Pagamentos</h2>
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-corpo-forte">Usar Pix com QR Code (Mercado Pago)</p>
+          <p class="text-legenda">Quando ativado, o Pix gera uma cobrança com QR Code real via Mercado Pago e a venda só é concluída após a confirmação do pagamento. Quando desativado, o Pix funciona como hoje (instantâneo, sem gateway).</p>
+        </div>
+        <button
+          type="button"
+          id="toggle-pix-gateway"
+          class="toggle-switch"
+          role="switch"
+          aria-checked="false"
+          aria-labelledby="label-toggle-pix-gateway"
+          disabled>
+          <span class="sr-only" id="label-toggle-pix-gateway">Usar Pix com QR Code (Mercado Pago)</span>
+        </button>
+      </div>
+      <p class="text-legenda mt-3">As chaves de acesso do Mercado Pago são configuradas apenas no servidor (arquivo de ambiente do backend) e não ficam visíveis aqui por segurança.</p>
+    </section>
+
+    <section class="card">
+      <h2 class="mb-3">Usuários e perfis</h2>
+      <p class="text-legenda">Gestão de usuários (Atendente / Responsável) — funcionalidade a ser definida junto com o backend-dev quanto à autenticação.</p>
+    </section>
+  </div>
+</main>
+
+<div id="bottombar-root"></div>
+<script type="module" src="js/layout.js"></script>
+<script type="module" src="js/configuracoes.js"></script>
+</body>
+</html>

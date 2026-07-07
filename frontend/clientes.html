@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clientes e Fiado — Sistema Farmácia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: { colors: {
+      primary: { DEFAULT: '#0F766E', hover: '#0B5D57', light: '#CCFBF1' },
+      surface: '#FFFFFF', bg: '#F4F6F7', border: '#D9DEE1',
+      textmain: '#1F2937', textmuted: '#5B6672',
+      success: { DEFAULT: '#15803D', bg: '#DCFCE7' },
+      warning: { DEFAULT: '#B45309', bg: '#FEF3C7' },
+      danger: { DEFAULT: '#B91C1C', bg: '#FEE2E2' },
+    } } }
+  };
+</script>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="clientes">
+<div id="sidebar-root"></div>
+<div id="topbar-root"></div>
+<div id="toast-container" aria-live="polite"></div>
+
+<main class="md:ml-[72px] xl:ml-[220px] pt-16 pb-20 md:pb-6 min-h-screen">
+  <div class="p-4 md:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <h1>Clientes</h1>
+      <button type="button" id="btn-novo-cliente" class="btn-primary">+ Novo Cliente</button>
+    </div>
+
+    <div class="mb-4 max-w-md">
+      <label class="form-label" for="busca-cliente">Buscar</label>
+      <input id="busca-cliente" type="text" class="input-base" placeholder="Buscar por nome ou telefone...">
+    </div>
+
+    <div class="card p-0 overflow-x-auto">
+      <table class="table-base table-responsive-cards w-full" aria-label="Lista de clientes">
+        <thead>
+          <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Telefone</th>
+            <th scope="col">Saldo devedor</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="clientes-body">
+          <tr><td colspan="4" class="text-center text-textmuted py-8">Carregando clientes...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<div id="bottombar-root"></div>
+
+<!-- Modal novo cliente -->
+<div id="modal-novo-cliente" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="titulo-novo-cliente">
+  <div class="modal-box">
+    <h2 id="titulo-novo-cliente">Novo Cliente</h2>
+    <form id="form-novo-cliente" class="flex flex-col gap-4 mt-4">
+      <div>
+        <label class="form-label" for="nc-nome">Nome*</label>
+        <input id="nc-nome" type="text" required class="input-base">
+      </div>
+      <div>
+        <label class="form-label" for="nc-telefone">Telefone</label>
+        <input id="nc-telefone" type="text" class="input-base" placeholder="(11) 91234-5678">
+      </div>
+      <div>
+        <label class="form-label" for="nc-endereco">Endereço (opcional)</label>
+        <input id="nc-endereco" type="text" class="input-base">
+      </div>
+      <p id="nc-erro" class="text-danger text-legenda hidden"></p>
+      <div class="flex justify-end gap-2">
+        <button type="button" id="btn-cancelar-novo-cliente" class="btn-secondary">Cancelar</button>
+        <button type="submit" class="btn-primary">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="module" src="js/layout.js"></script>
+<script type="module" src="js/clientes.js"></script>
+</body>
+</html>
